@@ -140,7 +140,7 @@ pub trait IteratorBack {
     ```
     use claudiofsr_lib::IteratorBack;
 
-        let iter = 1..6;
+        let iter = 1..=5;
         let data1: Vec<_> = iter.skip_last().collect();
         assert_eq!(data1, [1, 2, 3, 4] );
 
@@ -154,12 +154,12 @@ pub trait IteratorBack {
             .collect();
         assert_eq!(data2, [4, 5] );
 
-        let data3: Vec<_> = "1|2|3|4|5"
+        let data3: Vec<_> = "a|b|c|d|e"
             .split('|')
-            .skip_last()
-            .skip(1)
+            .skip_last() // skip "e"
+            .skip(1)     // skip "a"
             .collect();
-        assert_eq!(data3, ["2", "3", "4"] );
+        assert_eq!(data3, ["b", "c", "d"] );
 
         let data4: Vec<u64> = [1, 2]
             .into_iter()
@@ -172,49 +172,49 @@ pub trait IteratorBack {
     fn skip_last(self) -> Self;
 
     /**
-    Skips the specified number of elements from the end of the iterator.
+    Skip a specified number of elements from the end of the iterator.
 
-    This method consumes the iterator and returns a new iterator with the last `n` elements skipped.
+    Returns a new iterator with the last `n` elements skipped.
 
-    - n = 0: skip_back(0) returns the original iterator,
+    - `n = 0`: returns the original iterator (no elements skipped),
 
-    - n = 1: skip_back(1) skips the last element,
-
-    - n = 2: skip_back(2) skips the last 2 elements,
-
-    - n = 3 and beyond: it continues to skip n elements.
+    - `n > 0`: skips `n` elements from the end.
 
     ### Examples
 
     ```
     use claudiofsr_lib::IteratorBack;
 
-    let iter1 = 1..6;
-    let dados1: Vec<_> = iter1.skip_back(2).collect();
+    let iter = 1..=5;
+    let dados1: Vec<u64> = iter.skip_back(2).collect();
     assert_eq!(dados1, [1, 2, 3]);
 
-    let iter2 = 1..=10;
-    let data2: Vec<_> = iter2.skip_back(10).collect();
-    assert_eq!(data2, []);
-
-    let dados3: Vec<_> = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    let dados2: Vec<_> = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         .into_iter()
         .skip(1)
         .skip_back(2)
-        .skip(1)
+        .skip(2)
         .skip_back(1)
         .skip(1)
         .collect();
-    assert_eq!(dados3, [4, 5, 6]);
+    assert_eq!(dados2, [5, 6]);
 
-    let line = " | field_1| field_2 |field_3 | ";
-    let dados4: Vec<_> = line
+    let dados3: Vec<_> = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        .into_iter()
+        .skip(3)
+        .skip_back(4)
+        .skip(3)
+        .collect();
+    assert_eq!(dados3, []);
+
+    let line = "field_1 | field_2| field_3 |field_4 | field_5";
+    let dados4: Vec<String> = line
         .split('|')
         .skip_back(2) // Skip the last 2 elements
-        .skip(1) // Skip the first element (empty string)
+        .skip(1)      // Skip the first element (field_1)
         .map(|field| field.trim().to_string())
         .collect();
-    assert_eq!(dados4, ["field_1", "field_2"]);
+    assert_eq!(dados4, ["field_2", "field_3"]);
     ```
     */
     fn skip_back(self, n: usize) -> Self;
