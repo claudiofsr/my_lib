@@ -1,5 +1,41 @@
 use crate::MyResult;
-use std::hash::{BuildHasher, Hasher, RandomState};
+// use std::hash::{BuildHasher, Hasher, RandomState};
+
+// Migrating from C to Rust - Part 1: Calling Rust Code from C
+// https://www.youtube.com/watch?v=WsnFZk5-xwQ
+// Author: Gary Explains
+
+pub struct VRandom {
+    x: u64,
+}
+
+impl VRandom {
+    // Constructor to create a new instance with a seed
+    pub fn new(seed: u64) -> Self {
+        VRandom { x: seed }
+    }
+
+    // Method to generate the next random number
+    pub fn generate(&mut self) -> u64 {
+        self.x = self.x.wrapping_mul(69069).wrapping_add(362437);
+        self.x
+    }
+
+    // Method to reseed the generator
+    pub fn seed(&mut self, seed: u64) {
+        self.x = seed;
+    }
+}
+
+/// Generate random numbers without external dependencies
+pub fn rand() -> u64 {
+    // RandomState::new().build_hasher().finish()
+
+    let seed = 123456789;
+    let mut rng = VRandom::new(seed);
+    rng.generate()
+}
+
 /**
 Shuffle the vector in place with the Fisher-Yates algorithm.
 
@@ -52,14 +88,28 @@ pub fn get_random_integer_v2(min: u64, max: u64) -> MyResult<u64> {
     }
 }
 
-/// Generate random numbers without external dependencies
-pub fn rand() -> u64 {
-    RandomState::new().build_hasher().finish()
-}
-
 #[cfg(test)]
 mod test_random {
     use crate::*;
+
+    #[test]
+    /// `cargo test -- --show-output gen_random`
+    fn gen_random() {
+        let mut rng = VRandom::new(123456789);
+        let mut numbers = HashSet::new();
+
+        // Generate and print some random numbers
+        for n in 1..100 {
+            let random = rng.generate();
+            println!("random number {n:2}: {random}");
+
+            // Check for a specific one.
+            if !numbers.insert(random) {
+                eprintln!("Error: {random}");
+                panic!("Not random!");
+            }
+        }
+    }
 
     #[test]
     /// `cargo test -- --show-output vec_shuffle`
