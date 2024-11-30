@@ -109,6 +109,9 @@ mod test_random {
                 panic!("Not random!");
             }
         }
+
+        println!("numbers: {numbers:#?}");
+        assert_eq!(numbers.len(), 99);
     }
 
     #[test]
