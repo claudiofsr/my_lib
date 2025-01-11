@@ -139,7 +139,7 @@ pub const BASE_CALC_SOMA: [u16; 99] = {
     let mut index: usize = 0;
 
     while index < output.len() {
-        output[index] = index as u16 + 101;
+        output[index] = (index + 101) as u16;
         index += 1;
     }
 
@@ -152,23 +152,29 @@ pub const CST_CREDITO_BASICO: [u16; 7] = [50, 51, 52, 53, 54, 55, 56];
 
 pub const CST_CREDITO_PRESUMIDO: [u16; 7] = [60, 61, 62, 63, 64, 65, 66];
 
-/// Valores de 1 a 49
+/// Valores de 1 a 9 e 49
 pub const CST_RECEITA_BRUTA: [u16; 10] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 49];
-
-pub const CST_OUTRAS_OPERACOES: [u16; 1] = [49];
 
 pub const CSTS_NAO_TRIBUTADOS: [u16; 6] = [4, 6, 7, 8, 9, 49];
 
 /// Valores de 1 a 18
 pub const CODIGO_DA_NATUREZA_BC: [u16; 18] = {
+    // Initialize an array of size 18 with all elements set to 0.
     let mut output = [0; 18];
+
+    // Initialize an index variable starting at 0.
     let mut index: usize = 0;
 
+    // Loop through the array and assign values from 1 to 18.
     while index < output.len() {
-        output[index] = index as u16 + 1;
+        // Assign the current index + 1 to the corresponding position in the array.
+        output[index] = (index + 1) as u16;
+
+        // Increment the index by 1.
         index += 1;
     }
 
+    // Return the populated array.
     output
 };
 
